@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Basewave</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #006BA6, #0AADA8); min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+        .card { background: white; border-radius: 20px; padding: 40px; width: 100%; max-width: 420px; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
+        .logo { text-align: center; margin-bottom: 30px; }
+        .logo h1 { font-size: 28px; font-weight: 900; color: #006BA6; }
+        .logo p { color: #8A96A3; font-size: 13px; margin-top: 4px; }
+        .form-group { margin-bottom: 18px; }
+        label { display: block; font-size: 13px; font-weight: 700; color: #5A6472; margin-bottom: 6px; }
+        input { width: 100%; padding: 12px 14px; border: 1.5px solid #E8ECF2; border-radius: 10px; font-size: 14px; outline: none; transition: border 0.2s; }
+        input:focus { border-color: #006BA6; }
+        .btn { width: 100%; padding: 14px; border: none; border-radius: 12px; background: #006BA6; color: white; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 8px; }
+        .btn:hover { background: #004F7C; }
+        .link { text-align: center; margin-top: 20px; font-size: 13px; color: #8A96A3; }
+        .link a { color: #006BA6; font-weight: 700; text-decoration: none; }
+        .messages { margin-bottom: 16px; }
+        .msg-error { background: #FFF0F0; color: #FF5A5F; padding: 10px 14px; border-radius: 10px; font-size: 13px; margin-bottom: 8px; border: 1px solid #FFCDD2; }
+        .msg-success { background: #E8F5EE; color: #1B7A4E; padding: 10px 14px; border-radius: 10px; font-size: 13px; margin-bottom: 8px; }
+    </style>
+</head>
+<body>
+<div class="card">
+    <div class="logo">
+        <h1>🌊 Basewave</h1>
+        <p>Siargao Island Rental System</p>
+    </div>
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="msg-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label>Username</label>
+            <input type="text" name="username" placeholder="Enter your username" required>
+        </div>
+        <div class="form-group">
+            <label>Password</label>
+            <input type="password" name="password" placeholder="Enter your password" required>
+        </div>
+        <button type="submit" class="btn">Login</button>
+    </form>
+    <div class="link">Don't have an account? <a href="{% url 'register' %}">Register here</a></div>
+</div>
+</body>
+</html>
