@@ -1,3 +1,72 @@
-from django.shortcuts import render
+from django.contrib import messages
+from django.shortcuts import redirect, render
 
-# Create your views here.
+from accounts.decorators import role_required
+from .models import Listing, Shop
+
+
+def browse_listings_view(request):
+    listings = Listing.objects.filter(is_available=True).select_related('shop')
+    return render(request, 'shops/browse_listings.html', {'listings': listings})
+
+
+@role_required('shop_owner')
+def create_shop_view(request):
+    if request.method == 'POST':
+        shop_name = request.POST.get('shop_name')
+        description = request.POST.get('description')
+        contact_number = request.POST.get('contact_number')
+        location = request.POST.get('location')
+
+        if not shop_name or not contact_number or not location:
+            messages.error(request, 'Shop name, contact number, and location are required.')
+            return render(request, 'shops/create_shop.html')
+
+        Shop.objects.create(
+            owner=request.user,
+            shop_name=shop_name,
+            description=description,
+            contact_number=contact_number,
+            location=location,
+        )
+        messages.success(request, 'Shop created successfully!')
+        return redirect('dashboard')
+
+    return render(request, 'shops/create_shop.html')
+
+
+@role_required('shop_owner')
+def create_listing_view(request):
+    shop = Shop.objects.filter(owner=request.user).first()
+
+    if not shop:
+        messages.error(request, 'You need to create a shop first before adding listings.')
+        return redirect('create_shop')
+
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+        category = request.POST.get('category')
+        price_per_day = request.POST.get('price_per_day')
+
+        if not title or not price_per_day:
+            messages.error(request, 'Title and price per day are required.')
+            return render(request, 'shops/create_listing.html', {'shop': shop})
+
+        Listing.objects.create(
+            shop=shop,
+            title=title,
+            description=description,
+            category=category,
+            price_per_day=price_per_day,
+        )
+        messages.success(request, 'Listing created successfully!')
+        return redirect('dashboard')
+
+    return render(request, 'shops/create_listing.html', {'shop': shop})
+
+
+@role_required('admin')
+def admin_shops_view(request):
+    shops = Shop.objects.select_related('owner').order_by('shop_name')
+    return render(request, 'shops/admin_shops.html', {'shops': shops, 'active': 'shops'})

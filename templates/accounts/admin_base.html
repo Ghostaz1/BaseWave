@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Basewave Admin{% endblock %}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: #F4F6F9; }
+        .sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: 240px; background: linear-gradient(180deg, #006BA6, #004F7C); padding: 0; }
+        .sidebar-logo { padding: 28px 24px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .sidebar-logo h2 { color: white; font-size: 20px; font-weight: 900; }
+        .sidebar-logo p { color: rgba(255,255,255,0.5); font-size: 11px; margin-top: 2px; }
+        .sidebar-menu { padding: 20px 0; }
+        .menu-item { display: flex; align-items: center; gap: 12px; padding: 13px 24px; color: rgba(255,255,255,0.7); font-size: 14px; font-weight: 500; cursor: pointer; text-decoration: none; transition: all 0.2s; }
+        .menu-item:hover, .menu-item.active { background: rgba(255,255,255,0.12); color: white; }
+        .main { margin-left: 240px; padding: 30px; }
+        .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; }
+        .topbar h1 { font-size: 22px; font-weight: 800; color: #1A202C; }
+        .topbar-right { display: flex; align-items: center; gap: 12px; }
+        .user-badge { background: white; border-radius: 20px; padding: 8px 16px; font-size: 13px; font-weight: 600; color: #1A202C; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .logout-btn { padding: 8px 16px; border-radius: 20px; border: none; background: #FF5A5F; color: white; font-size: 13px; font-weight: 700; cursor: pointer; text-decoration: none; }
+        .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 28px; }
+        .stat-card { background: white; border-radius: 16px; padding: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+        .stat-card .val { font-size: 32px; font-weight: 900; color: #006BA6; }
+        .stat-card .label { font-size: 12px; color: #8A96A3; margin-top: 4px; }
+        .table-card { background: white; border-radius: 16px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+        .table-card h3 { font-size: 15px; font-weight: 700; color: #1A202C; margin-bottom: 16px; }
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; font-size: 12px; font-weight: 700; color: #8A96A3; padding: 8px 12px; border-bottom: 1px solid #E8ECF2; text-transform: uppercase; }
+        td { padding: 12px; font-size: 13px; color: #1A202C; border-bottom: 1px solid #F4F6F9; }
+        .role-badge { padding: 3px 10px; border-radius: 8px; font-size: 11px; font-weight: 700; }
+        .role-tourist { background: #E8F4FD; color: #006BA6; }
+        .role-shop_owner { background: #E8F5EE; color: #1B7A4E; }
+        .role-admin { background: #FFF0F0; color: #FF5A5F; }
+        .status-badge { padding: 3px 10px; border-radius: 8px; font-size: 11px; font-weight: 700; }
+        .status-pending { background: #FFF7E0; color: #B7791F; }
+        .status-confirmed { background: #E8F4FD; color: #006BA6; }
+        .status-completed { background: #E8F5EE; color: #1B7A4E; }
+        .status-cancelled { background: #FFF0F0; color: #FF5A5F; }
+        .status-paid { background: #E8F5EE; color: #1B7A4E; }
+        .status-failed { background: #FFF0F0; color: #FF5A5F; }
+        .status-refunded { background: #F0F0F0; color: #5A6472; }
+        .welcome-banner { background: linear-gradient(135deg, #006BA6, #0AADA8); border-radius: 16px; padding: 24px; margin-bottom: 24px; color: white; }
+        .welcome-banner h2 { font-size: 20px; font-weight: 800; }
+        .welcome-banner p { font-size: 13px; opacity: 0.75; margin-top: 4px; }
+    </style>
+</head>
+<body>
+<div class="sidebar">
+    <div class="sidebar-logo">
+        <h2>🌊 Basewave</h2>
+        <p>Admin Dashboard</p>
+    </div>
+    <div class="sidebar-menu">
+        <a href="{% url 'dashboard' %}" class="menu-item {% if active == 'dashboard' %}active{% endif %}">📊 Dashboard</a>
+        <a href="{% url 'admin_users' %}" class="menu-item {% if active == 'users' %}active{% endif %}">👥 Users</a>
+        <a href="{% url 'admin_shops' %}" class="menu-item {% if active == 'shops' %}active{% endif %}">🏪 Shops</a>
+        <a href="{% url 'admin_bookings' %}" class="menu-item {% if active == 'bookings' %}active{% endif %}">📋 Bookings</a>
+        <a href="{% url 'admin_payments' %}" class="menu-item {% if active == 'payments' %}active{% endif %}">💰 Payments</a>
+        <a href="#" class="menu-item">⚙️ Settings</a>
+    </div>
+</div>
+<div class="main">
+    <div class="topbar">
+        <h1>{% block page_title %}{% endblock %}</h1>
+        <div class="topbar-right">
+            <div class="user-badge">👤 {{ user.first_name }} {{ user.last_name }}</div>
+            <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+        </div>
+    </div>
+    {% block content %}{% endblock %}
+</div>
+</body>
+</html>

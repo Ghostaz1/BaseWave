@@ -1,0 +1,28 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Browse Listings | Basewave</title>
+</head>
+<body>
+
+<h2>Available Listings</h2>
+
+{% if listings %}
+    {% for listing in listings %}
+        <div>
+            <h3>{{ listing.title }}</h3>
+            <p>Category: {{ listing.category }}</p>
+            <p>Shop: {{ listing.shop.shop_name }} ({{ listing.shop.location }})</p>
+            <p>Price per day: {{ listing.price_per_day }}</p>
+            <a href="{% url 'create_booking' listing.id %}">Book this</a>
+        </div>
+        <hr>
+    {% endfor %}
+{% else %}
+    <p>No listings available right now.</p>
+{% endif %}
+
+</body>
+</html>

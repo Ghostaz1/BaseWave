@@ -35,6 +35,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'basewave.urls'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = 'Basewave <noreply@basewave.com>'
 
 TEMPLATES = [
     {

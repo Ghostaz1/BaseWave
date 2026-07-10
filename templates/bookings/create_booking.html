@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Book Listing | Basewave</title>
+</head>
+<body>
+
+<h2>Book: {{ listing.title }}</h2>
+<p>Shop: {{ listing.shop.shop_name }}</p>
+<p>Price per day: {{ listing.price_per_day }}</p>
+
+{% if messages %}
+    {% for message in messages %}
+        <p>{{ message }}</p>
+    {% endfor %}
+{% endif %}
+
+<form method="POST">
+    {% csrf_token %}
+    <label>Start Date</label>
+    <input type="date" name="start_date" required>
+
+    <label>End Date</label>
+    <input type="date" name="end_date" required>
+
+    <button type="submit">Confirm Booking</button>
+</form>
+
+</body>
+</html>

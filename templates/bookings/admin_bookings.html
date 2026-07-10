@@ -1,0 +1,38 @@
+{% extends 'accounts/admin_base.html' %}
+{% block title %}Bookings | Basewave{% endblock %}
+{% block page_title %}Bookings{% endblock %}
+{% block content %}
+    <div class="table-card">
+        <h3>All Bookings ({{ bookings|length }})</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Booking ID</th>
+                    <th>Tourist</th>
+                    <th>Items</th>
+                    <th>Booking Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for booking in bookings %}
+                <tr>
+                    <td>#{{ booking.id }}</td>
+                    <td>{{ booking.tourist.first_name }} {{ booking.tourist.last_name }}</td>
+                    <td>
+                        {% for item in booking.items.all %}
+                            {{ item.listing.title }}{% if not forloop.last %}, {% endif %}
+                        {% empty %}
+                            -
+                        {% endfor %}
+                    </td>
+                    <td>{{ booking.booking_date|date:"M d, Y" }}</td>
+                    <td><span class="status-badge status-{{ booking.status }}">{{ booking.status }}</span></td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="5" style="text-align:center; color:#8A96A3; padding:20px;">No bookings yet.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

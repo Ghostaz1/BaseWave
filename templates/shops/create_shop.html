@@ -1,0 +1,36 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Shop | Basewave</title>
+</head>
+<body>
+
+<h2>Create Your Shop</h2>
+
+{% if messages %}
+    {% for message in messages %}
+        <p>{{ message }}</p>
+    {% endfor %}
+{% endif %}
+
+<form method="POST">
+    {% csrf_token %}
+    <label>Shop Name</label>
+    <input type="text" name="shop_name" required>
+
+    <label>Description</label>
+    <textarea name="description"></textarea>
+
+    <label>Contact Number</label>
+    <input type="text" name="contact_number" required>
+
+    <label>Location</label>
+    <input type="text" name="location" required>
+
+    <button type="submit">Create Shop</button>
+</form>
+
+</body>
+</html>

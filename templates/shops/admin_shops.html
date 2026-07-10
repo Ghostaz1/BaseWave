@@ -1,0 +1,32 @@
+{% extends 'accounts/admin_base.html' %}
+{% block title %}Shops | Basewave{% endblock %}
+{% block page_title %}Shops{% endblock %}
+{% block content %}
+    <div class="table-card">
+        <h3>All Registered Shops ({{ shops|length }})</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Shop Name</th>
+                    <th>Owner</th>
+                    <th>Contact</th>
+                    <th>Location</th>
+                    <th>Listings</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for shop in shops %}
+                <tr>
+                    <td>{{ shop.shop_name }}</td>
+                    <td>{{ shop.owner.first_name }} {{ shop.owner.last_name }}</td>
+                    <td>{{ shop.contact_number }}</td>
+                    <td>{{ shop.location }}</td>
+                    <td>{{ shop.listings.count }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="5" style="text-align:center; color:#8A96A3; padding:20px;">No shops yet.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

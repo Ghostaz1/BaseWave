@@ -4,6 +4,18 @@ from django.db import models
 from shops.models import Listing
 
 
+def is_listing_available(listing, start_date, end_date, exclude_booking_item_id=None):
+    conflicts = BookingItem.objects.filter(
+        listing=listing,
+        booking__status__in=[Booking.Status.PENDING, Booking.Status.CONFIRMED],
+        start_date__lt=end_date,
+        end_date__gt=start_date,
+    )
+    if exclude_booking_item_id:
+        conflicts = conflicts.exclude(id=exclude_booking_item_id)
+    return not conflicts.exists()
+
+
 class Booking(models.Model):
     class Status(models.TextChoices):
         PENDING = 'pending', 'Pending'
