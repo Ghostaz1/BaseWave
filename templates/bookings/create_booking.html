@@ -1,32 +1,22 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Book Listing | Basewave</title>
-</head>
-<body>
+{% extends 'shops/tourist_base.html' %}
+{% block title %}Book Listing | Basewave{% endblock %}
+{% block content %}
+<div style="background:white; border-radius:16px; padding:32px; max-width:480px; margin:0 auto; box-shadow:0 2px 12px rgba(0,0,0,0.06);">
+    <h2 style="font-size:20px; font-weight:800; margin-bottom:6px;">Book: {{ listing.title }}</h2>
+    <p style="font-size:13px; color:#5A6472; margin-bottom:2px;">🏪 {{ listing.shop.shop_name }}</p>
+    <p style="font-size:17px; font-weight:900; color:#006BA6; margin-bottom:24px;">₱{{ listing.price_per_day }}<span style="font-size:12px; font-weight:600; color:#8A96A3;"> /day</span></p>
 
-<h2>Book: {{ listing.title }}</h2>
-<p>Shop: {{ listing.shop.shop_name }}</p>
-<p>Price per day: {{ listing.price_per_day }}</p>
-
-{% if messages %}
-    {% for message in messages %}
-        <p>{{ message }}</p>
-    {% endfor %}
-{% endif %}
-
-<form method="POST">
-    {% csrf_token %}
-    <label>Start Date</label>
-    <input type="date" name="start_date" required>
-
-    <label>End Date</label>
-    <input type="date" name="end_date" required>
-
-    <button type="submit">Confirm Booking</button>
-</form>
-
-</body>
-</html>
+    <form method="POST">
+        {% csrf_token %}
+        <div style="margin-bottom:14px;">
+            <label style="display:block; font-size:13px; font-weight:700; color:#5A6472; margin-bottom:5px;">Start Date</label>
+            <input type="date" name="start_date" required style="width:100%; padding:11px 14px; border:1.5px solid #E8ECF2; border-radius:10px; font-size:14px;">
+        </div>
+        <div style="margin-bottom:20px;">
+            <label style="display:block; font-size:13px; font-weight:700; color:#5A6472; margin-bottom:5px;">End Date</label>
+            <input type="date" name="end_date" required style="width:100%; padding:11px 14px; border:1.5px solid #E8ECF2; border-radius:10px; font-size:14px;">
+        </div>
+        <button type="submit" style="width:100%; padding:14px; border:none; border-radius:12px; background:#006BA6; color:white; font-size:15px; font-weight:700; cursor:pointer;">Confirm Booking</button>
+    </form>
+</div>
+{% endblock %}

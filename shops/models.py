@@ -3,10 +3,10 @@ from django.db import models
 
 
 class Shop(models.Model):
-    owner = models.ForeignKey(
+    owner = models.OneToOneField(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name='shops',
+        related_name='shop',
         limit_choices_to={'role': 'shop_owner'},
     )
     shop_name = models.CharField(max_length=150)

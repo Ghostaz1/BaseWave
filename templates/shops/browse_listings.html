@@ -1,28 +1,25 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Browse Listings | Basewave</title>
-</head>
-<body>
-
-<h2>Available Listings</h2>
+{% extends 'shops/tourist_base.html' %}
+{% block title %}Browse Listings | Basewave{% endblock %}
+{% block content %}
+<h2 style="font-size:20px; font-weight:800; margin-bottom:4px;">Available Listings</h2>
+<p style="font-size:13px; color:#8A96A3; margin-bottom:24px;">Surfboards, motorbikes, rooms, and tours around Siargao.</p>
 
 {% if listings %}
+<div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:16px;">
     {% for listing in listings %}
-        <div>
-            <h3>{{ listing.title }}</h3>
-            <p>Category: {{ listing.category }}</p>
-            <p>Shop: {{ listing.shop.shop_name }} ({{ listing.shop.location }})</p>
-            <p>Price per day: {{ listing.price_per_day }}</p>
-            <a href="{% url 'create_booking' listing.id %}">Book this</a>
+    <div style="background:white; border-radius:16px; padding:20px; box-shadow:0 2px 12px rgba(0,0,0,0.06);">
+        <span style="display:inline-block; background:#E8F4FD; color:#006BA6; font-size:11px; font-weight:700; padding:3px 10px; border-radius:8px; text-transform:uppercase; margin-bottom:10px;">{{ listing.category }}</span>
+        <h3 style="font-size:16px; font-weight:800; margin-bottom:6px;">{{ listing.title }}</h3>
+        <p style="font-size:13px; color:#5A6472; margin-bottom:4px;">🏪 {{ listing.shop.shop_name }}</p>
+        <p style="font-size:13px; color:#5A6472; margin-bottom:14px;">📍 {{ listing.shop.location }}</p>
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:17px; font-weight:900; color:#006BA6;">₱{{ listing.price_per_day }}<span style="font-size:12px; font-weight:600; color:#8A96A3;"> /day</span></span>
+            <a href="{% url 'create_booking' listing.id %}" style="background:#006BA6; color:white; text-decoration:none; padding:9px 16px; border-radius:10px; font-size:13px; font-weight:700;">Book</a>
         </div>
-        <hr>
+    </div>
     {% endfor %}
+</div>
 {% else %}
-    <p>No listings available right now.</p>
+<div style="background:white; border-radius:16px; padding:32px; text-align:center; color:#8A96A3;">No listings available right now — check back soon!</div>
 {% endif %}
-
-</body>
-</html>
+{% endblock %}

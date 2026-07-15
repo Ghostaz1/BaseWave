@@ -74,7 +74,7 @@ def login_view(request):
             elif user.role == 'shop_owner':
                 from shops.models import Shop
                 if Shop.objects.filter(owner=user).exists():
-                    return redirect('create_listing')
+                    return redirect('my_listings')
                 else:
                     return redirect('create_shop')
             else:
@@ -138,6 +138,14 @@ def logout_view(request):
 
 @login_required
 def dashboard_view(request):
+    if request.user.role != 'admin' and not request.user.is_superuser:
+        if request.user.role == 'shop_owner':
+            from shops.models import Shop
+            if Shop.objects.filter(owner=request.user).exists():
+                return redirect('my_listings')
+            return redirect('create_shop')
+        return redirect('browse_listings')
+
     total_users = CustomUser.objects.count()
     tourists = CustomUser.objects.filter(role='tourist').count()
     shop_owners = CustomUser.objects.filter(role='shop_owner').count()
@@ -150,10 +158,9 @@ def dashboard_view(request):
         'recent_users': recent_users,
         'active': 'dashboard',
     }
-    context['active'] = 'dashboard'
     return render(request, 'accounts/dashboard.html', context)
-@role_required('admin')
 
+@role_required('admin')
 def users_list_view(request):
     users = CustomUser.objects.order_by('-date_joined')
     return render(request, 'accounts/users_list.html', {'users': users, 'active': 'users'})

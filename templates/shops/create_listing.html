@@ -1,42 +1,35 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Add Listing | Basewave</title>
-</head>
-<body>
+{% extends 'shops/shop_owner_base.html' %}
+{% block title %}Add Listing | Basewave{% endblock %}
+{% block content %}
+<div style="background:white; border-radius:16px; padding:32px; max-width:520px; margin:0 auto; box-shadow:0 2px 12px rgba(0,0,0,0.06);">
+    <h2 style="font-size:20px; font-weight:800; margin-bottom:6px;">Add Listing</h2>
+    <p style="font-size:13px; color:#8A96A3; margin-bottom:24px;">Adding to <strong>{{ shop.shop_name }}</strong></p>
 
-<h2>Add Listing to {{ shop.shop_name }}</h2>
-
-{% if messages %}
-    {% for message in messages %}
-        <p>{{ message }}</p>
-    {% endfor %}
-{% endif %}
-
-<form method="POST">
-    {% csrf_token %}
-    <label>Title</label>
-    <input type="text" name="title" required>
-
-    <label>Description</label>
-    <textarea name="description"></textarea>
-
-    <label>Category</label>
-    <select name="category">
-        <option value="motorbike">Motorbike</option>
-        <option value="surfboard">Surfboard</option>
-        <option value="room">Room</option>
-        <option value="tour">Tour</option>
-        <option value="other">Other</option>
-    </select>
-
-    <label>Price Per Day</label>
-    <input type="number" name="price_per_day" step="0.01" required>
-
-    <button type="submit">Add Listing</button>
-</form>
-
-</body>
-</html>
+    <form method="POST">
+        {% csrf_token %}
+        <div style="margin-bottom:14px;">
+            <label style="display:block; font-size:13px; font-weight:700; color:#5A6472; margin-bottom:5px;">Title</label>
+            <input type="text" name="title" required style="width:100%; padding:11px 14px; border:1.5px solid #E8ECF2; border-radius:10px; font-size:14px;">
+        </div>
+        <div style="margin-bottom:14px;">
+            <label style="display:block; font-size:13px; font-weight:700; color:#5A6472; margin-bottom:5px;">Description</label>
+            <textarea name="description" rows="3" style="width:100%; padding:11px 14px; border:1.5px solid #E8ECF2; border-radius:10px; font-size:14px; resize:vertical;"></textarea>
+        </div>
+        <div style="margin-bottom:14px;">
+            <label style="display:block; font-size:13px; font-weight:700; color:#5A6472; margin-bottom:5px;">Category</label>
+            <select name="category" style="width:100%; padding:11px 14px; border:1.5px solid #E8ECF2; border-radius:10px; font-size:14px;">
+                <option value="motorbike">Motorbike</option>
+                <option value="surfboard">Surfboard</option>
+                <option value="room">Room</option>
+                <option value="tour">Tour</option>
+                <option value="other">Other</option>
+            </select>
+        </div>
+        <div style="margin-bottom:20px;">
+            <label style="display:block; font-size:13px; font-weight:700; color:#5A6472; margin-bottom:5px;">Price Per Day</label>
+            <input type="number" name="price_per_day" step="0.01" required style="width:100%; padding:11px 14px; border:1.5px solid #E8ECF2; border-radius:10px; font-size:14px;">
+        </div>
+        <button type="submit" style="width:100%; padding:14px; border:none; border-radius:12px; background:#006BA6; color:white; font-size:15px; font-weight:700; cursor:pointer;">Add Listing</button>
+    </form>
+</div>
+{% endblock %}

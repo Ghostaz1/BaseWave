@@ -1,5 +1,6 @@
 from django.contrib import messages
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
+from django.views.decorators.http import require_POST
 
 from accounts.decorators import role_required
 from .models import Listing, Shop
@@ -12,6 +13,11 @@ def browse_listings_view(request):
 
 @role_required('shop_owner')
 def create_shop_view(request):
+    existing_shop = Shop.objects.filter(owner=request.user).first()
+    if existing_shop:
+        messages.info(request, 'You already have a shop. Add listings to it below.')
+        return redirect('create_listing')
+
     if request.method == 'POST':
         shop_name = request.POST.get('shop_name')
         description = request.POST.get('description')
@@ -30,7 +36,7 @@ def create_shop_view(request):
             location=location,
         )
         messages.success(request, 'Shop created successfully!')
-        return redirect('dashboard')
+        return redirect('create_listing')
 
     return render(request, 'shops/create_shop.html')
 
@@ -61,7 +67,7 @@ def create_listing_view(request):
             price_per_day=price_per_day,
         )
         messages.success(request, 'Listing created successfully!')
-        return redirect('dashboard')
+        return redirect('my_listings')
 
     return render(request, 'shops/create_listing.html', {'shop': shop})
 
@@ -70,3 +76,26 @@ def create_listing_view(request):
 def admin_shops_view(request):
     shops = Shop.objects.select_related('owner').order_by('shop_name')
     return render(request, 'shops/admin_shops.html', {'shops': shops, 'active': 'shops'})
+
+
+@role_required('shop_owner')
+def my_listings_view(request):
+    shop = Shop.objects.filter(owner=request.user).first()
+
+    if not shop:
+        messages.info(request, 'You need to create a shop first.')
+        return redirect('create_shop')
+
+    listings = shop.listings.all()
+    return render(request, 'shops/my_listings.html', {'shop': shop, 'listings': listings})
+
+
+@role_required('shop_owner')
+@require_POST
+def toggle_listing_availability_view(request, listing_id):
+    listing = get_object_or_404(Listing, id=listing_id, shop__owner=request.user)
+    listing.is_available = not listing.is_available
+    listing.save()
+    status = 'available' if listing.is_available else 'unavailable'
+    messages.success(request, f'"{listing.title}" marked as {status}.')
+    return redirect('my_listings')

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Basewave{% endblock %}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: #F4F6F9; color: #1A202C; }
+        .navbar { background: linear-gradient(135deg, #006BA6, #0AADA8); padding: 16px 32px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 12px rgba(0,0,0,0.1); }
+        .navbar .logo { color: white; font-size: 20px; font-weight: 900; text-decoration: none; }
+        .navbar .logo span { font-weight: 400; font-size: 12px; opacity: 0.8; display: block; }
+        .nav-links { display: flex; align-items: center; gap: 8px; }
+        .nav-links a { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 14px; font-weight: 600; padding: 8px 16px; border-radius: 20px; transition: all 0.2s; }
+        .nav-links a:hover, .nav-links a.active { background: rgba(255,255,255,0.15); color: white; }
+        .nav-links .logout-btn { background: #FF5A5F; color: white; padding: 8px 18px; border-radius: 20px; }
+        .nav-links .logout-btn:hover { background: #E14448; }
+        .main { max-width: 960px; margin: 0 auto; padding: 32px 24px; }
+        .msg-error { background: #FFF0F0; color: #FF5A5F; padding: 12px 16px; border-radius: 10px; font-size: 13px; margin-bottom: 16px; }
+        .msg-success { background: #E8F5EE; color: #1B7A4E; padding: 12px 16px; border-radius: 10px; font-size: 13px; margin-bottom: 16px; }
+        .msg-info { background: #E8F4FD; color: #006BA6; padding: 12px 16px; border-radius: 10px; font-size: 13px; margin-bottom: 16px; }
+    </style>
+</head>
+<body>
+<div class="navbar">
+    <a href="{% url 'my_listings' %}" class="logo">🌊 Basewave <span>Shop Owner</span></a>
+    <div class="nav-links">
+        <a href="{% url 'my_listings' %}" class="{% if active == 'my_listings' %}active{% endif %}">My Listings</a>
+        <a href="{% url 'create_listing' %}" class="{% if active == 'create_listing' %}active{% endif %}">Add Listing</a>
+        <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+    </div>
+</div>
+<div class="main">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="msg-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+    {% block content %}{% endblock %}
+</div>
+</body>
+</html>
