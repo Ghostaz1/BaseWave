@@ -26,6 +26,7 @@
     <a href="{% url 'browse_listings' %}" class="logo">🌊 Basewave <span>Tourist</span></a>
     <div class="nav-links">
         <a href="{% url 'browse_listings' %}" class="{% if active == 'browse_listings' %}active{% endif %}">Browse Listings</a>
+        <a href="{% url 'my_bookings' %}" class="{% if active == 'my_bookings' %}active{% endif %}">My Bookings</a>
         <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
     </div>
 </div>

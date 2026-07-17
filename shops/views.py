@@ -59,13 +59,22 @@ def create_listing_view(request):
             messages.error(request, 'Title and price per day are required.')
             return render(request, 'shops/create_listing.html', {'shop': shop})
 
+        try:
+            price_value = float(price_per_day)
+            if price_value <= 0:
+                raise ValueError
+        except ValueError:
+            messages.error(request, 'Price per day must be a valid positive number.')
+            return render(request, 'shops/create_listing.html', {'shop': shop})
+
         Listing.objects.create(
             shop=shop,
             title=title,
             description=description,
             category=category,
-            price_per_day=price_per_day,
+            price_per_day=price_value,
         )
+
         messages.success(request, 'Listing created successfully!')
         return redirect('my_listings')
 

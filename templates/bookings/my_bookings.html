@@ -1,0 +1,48 @@
+{% extends 'shops/tourist_base.html' %}
+{% block title %}My Bookings | Basewave{% endblock %}
+{% block content %}
+<div style="margin-bottom:24px;">
+    <h2 style="font-size:20px; font-weight:800; margin-bottom:4px;">My Bookings</h2>
+    <p style="font-size:13px; color:#8A96A3;">{{ bookings.count }} booking{{ bookings.count|pluralize }}</p>
+</div>
+
+{% if bookings %}
+<div style="display:flex; flex-direction:column; gap:16px;">
+    {% for booking in bookings %}
+    <div style="background:white; border-radius:16px; padding:20px; box-shadow:0 2px 12px rgba(0,0,0,0.06);">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+            <h3 style="font-size:15px; font-weight:800;">Booking #{{ booking.id }}</h3>
+            <span style="font-size:11px; font-weight:700; padding:3px 10px; border-radius:8px;
+                {% if booking.status == 'pending' %}background:#FFF7E0; color:#B7791F;
+                {% elif booking.status == 'confirmed' %}background:#E8F4FD; color:#006BA6;
+                {% elif booking.status == 'completed' %}background:#E8F5EE; color:#1B7A4E;
+                {% else %}background:#FFF0F0; color:#FF5A5F;{% endif %}">
+                {{ booking.status|title }}
+            </span>
+        </div>
+
+        {% for item in booking.items.all %}
+        <p style="font-size:13px; color:#1A202C; margin-bottom:4px;">{{ item.listing.title }} — {{ item.start_date }} to {{ item.end_date }}</p>
+        {% endfor %}
+
+        {% for payment in booking.payments.all %}
+        <p style="font-size:13px; color:#8A96A3;">Payment: ₱{{ payment.amount_paid }} — {{ payment.payment_status|title }}</p>
+        {% endfor %}
+
+        {% if booking.status == 'pending' or booking.status == 'confirmed' %}
+        <form method="POST" action="{% url 'cancel_booking' booking.id %}" style="margin-top:12px;">
+            {% csrf_token %}
+            <button type="submit" style="padding:8px 16px; border:1.5px solid #FF5A5F; border-radius:10px; background:white; color:#FF5A5F; font-size:13px; font-weight:700; cursor:pointer;">
+                Cancel Booking
+            </button>
+        </form>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div style="background:white; border-radius:16px; padding:32px; text-align:center; color:#8A96A3;">
+    You haven't made any bookings yet. <a href="{% url 'browse_listings' %}" style="color:#006BA6; font-weight:700;">Browse listings</a>.
+</div>
+{% endif %}
+{% endblock %}

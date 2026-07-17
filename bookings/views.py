@@ -43,3 +43,53 @@ def create_booking_view(request, listing_id):
 def admin_bookings_view(request):
     bookings = Booking.objects.select_related('tourist').prefetch_related('items__listing').order_by('-booking_date')
     return render(request, 'bookings/admin_bookings.html', {'bookings': bookings, 'active': 'bookings'})
+
+
+@role_required('tourist')
+def my_bookings_view(request):
+    bookings = Booking.objects.filter(tourist=request.user).prefetch_related('items__listing', 'payments').order_by('-booking_date')
+    return render(request, 'bookings/my_bookings.html', {'bookings': bookings, 'active': 'my_bookings'})
+
+
+@role_required('tourist')
+def cancel_booking_view(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id, tourist=request.user)
+
+    if booking.status in ('cancelled', 'completed'):
+        messages.error(request, 'This booking cannot be cancelled.')
+        return redirect('my_bookings')
+
+    if request.method == 'POST':
+        booking.status = Booking.Status.CANCELLED
+        booking.save()
+        messages.success(request, 'Booking cancelled.')
+        return redirect('my_bookings')
+
+    return redirect('my_bookings')
+
+
+@role_required('shop_owner')
+def shop_bookings_view(request):
+    booking_items = BookingItem.objects.filter(
+        listing__shop__owner=request.user
+    ).select_related('booking', 'listing', 'booking__tourist').order_by('-booking__booking_date')
+
+    return render(request, 'bookings/shop_bookings.html', {'booking_items': booking_items, 'active': 'shop_bookings'})
+
+
+@role_required('shop_owner')
+def update_booking_status_view(request, booking_id, new_status):
+    booking = get_object_or_404(Booking, id=booking_id, items__listing__shop__owner=request.user)
+
+    valid_statuses = [choice[0] for choice in Booking.Status.choices]
+    if new_status not in valid_statuses:
+        messages.error(request, 'Invalid status.')
+        return redirect('shop_bookings')
+
+    if request.method == 'POST':
+        booking.status = new_status
+        booking.save()
+        messages.success(request, f'Booking marked as {new_status}.')
+        return redirect('shop_bookings')
+
+    return redirect('shop_bookings')
