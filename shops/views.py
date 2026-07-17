@@ -7,9 +7,14 @@ from .models import Listing, Shop
 
 
 def browse_listings_view(request):
-    listings = Listing.objects.filter(is_available=True).select_related('shop')
-    return render(request, 'shops/browse_listings.html', {'listings': listings})
+    shops = Shop.objects.filter(listings__is_available=True).distinct().order_by('shop_name')
+    return render(request, 'shops/browse_listings.html', {'shops': shops})
 
+
+def shop_detail_view(request, shop_id):
+    shop = get_object_or_404(Shop, id=shop_id)
+    listings = shop.listings.filter(is_available=True)
+    return render(request, 'shops/shop_detail.html', {'shop': shop, 'listings': listings})
 
 @role_required('shop_owner')
 def create_shop_view(request):

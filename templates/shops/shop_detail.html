@@ -1,0 +1,27 @@
+{% extends 'shops/tourist_base.html' %}
+{% block title %}{{ shop.shop_name }} | Basewave{% endblock %}
+{% block content %}
+<a href="{% url 'browse_listings' %}" style="font-size:13px; color:#006BA6; font-weight:700; text-decoration:none;">&larr; All Shops</a>
+<h2 style="font-size:20px; font-weight:800; margin-top:10px; margin-bottom:4px;">🏪 {{ shop.shop_name }}</h2>
+<p style="font-size:13px; color:#8A96A3; margin-bottom:24px;">📍 {{ shop.location }}</p>
+
+{% if listings %}
+<div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:16px;">
+    {% for listing in listings %}
+    <div style="background:white; border-radius:16px; padding:20px; box-shadow:0 2px 12px rgba(0,0,0,0.06);">
+        <span style="display:inline-block; background:#E8F4FD; color:#006BA6; font-size:11px; font-weight:700; padding:3px 10px; border-radius:8px; text-transform:uppercase; margin-bottom:10px;">{{ listing.category }}</span>
+        <h3 style="font-size:16px; font-weight:800; margin-bottom:6px;">{{ listing.title }}</h3>
+        {% if listing.board_type %}
+        <p style="font-size:13px; color:#5A6472; margin-bottom:4px;">{{ listing.get_board_type_display }}</p>
+        {% endif %}
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
+            <span style="font-size:17px; font-weight:900; color:#006BA6;">₱{{ listing.price_per_day }}<span style="font-size:12px; font-weight:600; color:#8A96A3;"> /{{ listing.price_unit }}</span></span>
+            <a href="{% url 'create_booking' listing.id %}" style="background:#006BA6; color:white; text-decoration:none; padding:9px 16px; border-radius:10px; font-size:13px; font-weight:700;">Book</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div style="background:white; border-radius:16px; padding:32px; text-align:center; color:#8A96A3;">No listings available from this shop right now.</div>
+{% endif %}
+{% endblock %}

@@ -1,25 +1,23 @@
 {% extends 'shops/tourist_base.html' %}
 {% block title %}Browse Listings | Basewave{% endblock %}
 {% block content %}
-<h2 style="font-size:20px; font-weight:800; margin-bottom:4px;">Available Listings</h2>
-<p style="font-size:13px; color:#8A96A3; margin-bottom:24px;">Surfboards, motorbikes, rooms, and tours around Siargao.</p>
+<h2 style="font-size:20px; font-weight:800; margin-bottom:4px;">Available Shops</h2>
+<p style="font-size:13px; color:#8A96A3; margin-bottom:24px;">Browse shops around Siargao, then pick what to rent.</p>
 
-{% if listings %}
+{% if shops %}
 <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:16px;">
-    {% for listing in listings %}
-    <div style="background:white; border-radius:16px; padding:20px; box-shadow:0 2px 12px rgba(0,0,0,0.06);">
-        <span style="display:inline-block; background:#E8F4FD; color:#006BA6; font-size:11px; font-weight:700; padding:3px 10px; border-radius:8px; text-transform:uppercase; margin-bottom:10px;">{{ listing.category }}</span>
-        <h3 style="font-size:16px; font-weight:800; margin-bottom:6px;">{{ listing.title }}</h3>
-        <p style="font-size:13px; color:#5A6472; margin-bottom:4px;">🏪 {{ listing.shop.shop_name }}</p>
-        <p style="font-size:13px; color:#5A6472; margin-bottom:14px;">📍 {{ listing.shop.location }}</p>
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-            <span style="font-size:17px; font-weight:900; color:#006BA6;">₱{{ listing.price_per_day }}<span style="font-size:12px; font-weight:600; color:#8A96A3;"> /day</span></span>
-            <a href="{% url 'create_booking' listing.id %}" style="background:#006BA6; color:white; text-decoration:none; padding:9px 16px; border-radius:10px; font-size:13px; font-weight:700;">Book</a>
+    {% for shop in shops %}
+    <a href="{% url 'shop_detail' shop.id %}" style="text-decoration:none; color:inherit;">
+        <div style="background:white; border-radius:16px; padding:20px; box-shadow:0 2px 12px rgba(0,0,0,0.06); height:100%;">
+            <h3 style="font-size:16px; font-weight:800; margin-bottom:6px;">🏪 {{ shop.shop_name }}</h3>
+            <p style="font-size:13px; color:#5A6472; margin-bottom:4px;">📍 {{ shop.location }}</p>
+            <p style="font-size:13px; color:#8A96A3; margin-bottom:14px;">{{ shop.listings.count }} listing{{ shop.listings.count|pluralize }}</p>
+            <span style="display:inline-block; background:#006BA6; color:white; padding:9px 16px; border-radius:10px; font-size:13px; font-weight:700;">View Listings</span>
         </div>
-    </div>
+    </a>
     {% endfor %}
 </div>
 {% else %}
-<div style="background:white; border-radius:16px; padding:32px; text-align:center; color:#8A96A3;">No listings available right now — check back soon!</div>
+<div style="background:white; border-radius:16px; padding:32px; text-align:center; color:#8A96A3;">No shops available right now — check back soon!</div>
 {% endif %}
 {% endblock %}

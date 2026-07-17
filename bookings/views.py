@@ -13,6 +13,7 @@ def create_booking_view(request, listing_id):
     if request.method == 'POST':
         start_date = request.POST.get('start_date')
         end_date = request.POST.get('end_date')
+        payment_method = request.POST.get('payment_method')
 
         if not start_date or not end_date:
             messages.error(request, 'Please provide both start and end dates.')
@@ -26,12 +27,28 @@ def create_booking_view(request, listing_id):
             messages.error(request, 'This listing is already booked for those dates.')
             return render(request, 'bookings/create_booking.html', {'listing': listing})
 
+        from payments.models import Payment
+        valid_methods = [choice[0] for choice in Payment.PaymentMethod.choices]
+        if payment_method not in valid_methods:
+            messages.error(request, 'Please select a valid payment method.')
+            return render(request, 'bookings/create_booking.html', {'listing': listing})
+
+        from datetime import date
+        num_days = (date.fromisoformat(end_date) - date.fromisoformat(start_date)).days
+        total_amount = listing.price_per_day * num_days
+
         booking = Booking.objects.create(tourist=request.user)
         BookingItem.objects.create(
             booking=booking,
             listing=listing,
             start_date=start_date,
             end_date=end_date,
+        )
+        Payment.objects.create(
+            booking=booking,
+            amount_paid=total_amount,
+            payment_status=Payment.PaymentStatus.PAID,
+            payment_method=payment_method,
         )
         messages.success(request, 'Booking created successfully!')
         return redirect('dashboard')
@@ -89,7 +106,12 @@ def update_booking_status_view(request, booking_id, new_status):
     if request.method == 'POST':
         booking.status = new_status
         booking.save()
+
+        if new_status == Booking.Status.CANCELLED:
+            from payments.models import Payment
+            Payment.objects.filter(
+                booking=booking, payment_status=Payment.PaymentStatus.PAID
+            ).update(payment_status=Payment.PaymentStatus.REFUNDED)
+
         messages.success(request, f'Booking marked as {new_status}.')
         return redirect('shop_bookings')
-
-    return redirect('shop_bookings')

@@ -27,6 +27,7 @@
     <div class="nav-links">
         <a href="{% url 'my_listings' %}" class="{% if active == 'my_listings' %}active{% endif %}">My Listings</a>
         <a href="{% url 'create_listing' %}" class="{% if active == 'create_listing' %}active{% endif %}">Add Listing</a>
+        <a href="{% url 'shop_bookings' %}" class="{% if active == 'shop_bookings' %}active{% endif %}">Bookings</a>
         <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
     </div>
 </div>

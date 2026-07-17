@@ -16,7 +16,16 @@
             <label style="display:block; font-size:13px; font-weight:700; color:#5A6472; margin-bottom:5px;">End Date</label>
             <input type="date" name="end_date" required style="width:100%; padding:11px 14px; border:1.5px solid #E8ECF2; border-radius:10px; font-size:14px;">
         </div>
-        <button type="submit" style="width:100%; padding:14px; border:none; border-radius:12px; background:#006BA6; color:white; font-size:15px; font-weight:700; cursor:pointer;">Confirm Booking</button>
+        <div style="margin-bottom:20px;">
+            <label style="display:block; font-size:13px; font-weight:700; color:#5A6472; margin-bottom:5px;">Payment Method</label>
+            <select name="payment_method" required style="width:100%; padding:11px 14px; border:1.5px solid #E8ECF2; border-radius:10px; font-size:14px;">
+                <option value="gcash">GCash</option>
+                <option value="paymaya">PayMaya</option>
+                <option value="card">Card</option>
+                <option value="cash">Cash</option>
+            </select>
+        </div>
+        <button type="submit" style="width:100%; padding:14px; border:none; border-radius:12px; background:#006BA6; color:white; font-size:15px; font-weight:700; cursor:pointer;">Confirm &amp; Pay</button>
     </form>
 </div>
 {% endblock %}

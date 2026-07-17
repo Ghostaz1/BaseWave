@@ -17,7 +17,7 @@
         </div>
         <div style="margin-bottom:14px;">
             <label style="display:block; font-size:13px; font-weight:700; color:#5A6472; margin-bottom:5px;">Category</label>
-            <select name="category" style="width:100%; padding:11px 14px; border:1.5px solid #E8ECF2; border-radius:10px; font-size:14px;">
+            <select name="category" id="id_category" onchange="toggleBoardType()" style="width:100%; padding:11px 14px; border:1.5px solid #E8ECF2; border-radius:10px; font-size:14px;">
                 <option value="motorbike">Motorbike</option>
                 <option value="surfboard">Surfboard</option>
                 <option value="room">Room</option>
@@ -25,11 +25,32 @@
                 <option value="other">Other</option>
             </select>
         </div>
+        <div id="board_type_field" style="margin-bottom:14px; display:none;">
+            <label style="display:block; font-size:13px; font-weight:700; color:#5A6472; margin-bottom:5px;">Board Type</label>
+            <select name="board_type" style="width:100%; padding:11px 14px; border:1.5px solid #E8ECF2; border-radius:10px; font-size:14px;">
+                <option value="longboard">Longboard</option>
+                <option value="shortboard">Shortboard</option>
+            </select>
+        </div>
         <div style="margin-bottom:20px;">
-            <label style="display:block; font-size:13px; font-weight:700; color:#5A6472; margin-bottom:5px;">Price Per Day</label>
+            <label id="price_label" style="display:block; font-size:13px; font-weight:700; color:#5A6472; margin-bottom:5px;">Price Per Day</label>
             <input type="number" name="price_per_day" step="0.01" required style="width:100%; padding:11px 14px; border:1.5px solid #E8ECF2; border-radius:10px; font-size:14px;">
         </div>
         <button type="submit" style="width:100%; padding:14px; border:none; border-radius:12px; background:#006BA6; color:white; font-size:15px; font-weight:700; cursor:pointer;">Add Listing</button>
     </form>
 </div>
+<script>
+    function toggleBoardType() {
+        const category = document.getElementById('id_category').value;
+        const boardField = document.getElementById('board_type_field');
+        const priceLabel = document.getElementById('price_label');
+        if (category === 'surfboard') {
+            boardField.style.display = 'block';
+            priceLabel.textContent = 'Price Per Hour';
+        } else {
+            boardField.style.display = 'none';
+            priceLabel.textContent = 'Price Per Day';
+        }
+    }
+</script>
 {% endblock %}
